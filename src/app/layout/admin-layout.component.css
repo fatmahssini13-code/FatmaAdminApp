@@ -1,0 +1,98 @@
+.admin-shell {
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.admin-shell *,
+.admin-shell *::before,
+.admin-shell *::after {
+  box-sizing: border-box;
+}
+
+/* SIDEBAR */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 240px;
+  height: 100vh;
+  padding: 20px;
+  background: #111827;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+  z-index: 100;
+}
+
+.logo {
+  color: #6366f1;
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+.subtitle {
+  color: #9ca3af;
+  text-align: center;
+  margin-bottom: 40px;
+  font-size: 13px;
+}
+
+.sidebar nav a {
+  display: block;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  color: #cbd5e1;
+  text-decoration: none;
+  border-radius: 10px;
+  transition: 0.3s;
+}
+
+.sidebar nav a:hover {
+  background: #1f2937;
+  color: white;
+}
+
+.sidebar nav a.active {
+  background: #6366f1;
+  color: white !important;
+}
+
+/* MAIN */
+.admin-main {
+  margin-left: 240px;
+  min-height: 100vh;
+  padding: 24px 30px 40px;
+  box-sizing: border-box;
+  background: #f3f4f6;
+}
+
+.admin-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+.btn-theme {
+  border: none;
+  padding: 12px 18px;
+  background: #111827;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-theme:hover {
+  background: #374151;
+}
+
+.admin-content {
+  min-width: 0;
+}
+
+/* Dark shell (body.dark-mode is toggled by ThemeService; layout surfaces follow) */
+:host-context(body.dark-mode) .admin-main {
+  background: #0f172a;
+}
+
+:host-context(body.dark-mode) .sidebar {
+  background: #020617;
+}

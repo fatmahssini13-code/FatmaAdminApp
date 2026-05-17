@@ -1,0 +1,46 @@
+<div class="dashboard-page">
+  <header class="dash-header">
+    <h1 class="dash-title">Tableau de bord</h1>
+    <p class="dash-lead">Vue d’ensemble des utilisateurs et des projets</p>
+  </header>
+
+  <div class="cards">
+    <div class="card blue">
+      <h3>Total Users</h3>
+      <p>{{ stats.users.total }}</p>
+    </div>
+
+    <div class="card purple">
+      <h3>Clients</h3>
+      <p>{{ stats.users.clients }}</p>
+    </div>
+
+    <div class="card cyan">
+      <h3>Freelancers</h3>
+      <p>{{ stats.users.freelancers }}</p>
+    </div>
+
+    <div class="card orange">
+      <h3>Escrow total</h3>
+      <p>{{ stats.escrow.total | number : '1.0-0' }}&nbsp;DT</p>
+    </div>
+  </div>
+
+  <div class="charts-grid">
+    <div class="chart-card">
+      <h2 class="chart-title">Project status</h2>
+      <p class="chart-sub">Count by workflow stage</p>
+      <div class="chart-surface chart-surface--bar">
+        <canvas #projectsChart></canvas>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <h2 class="chart-title">Users by role</h2>
+      <p class="chart-sub">Clients, freelancers, and admins</p>
+      <div class="chart-surface chart-surface--donut">
+        <canvas #usersChart></canvas>
+      </div>
+    </div>
+  </div>
+</div>

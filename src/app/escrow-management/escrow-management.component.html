@@ -1,0 +1,187 @@
+<div class="escrow-page">
+  <header class="escrow-header">
+    <h1 class="escrow-title">Escrow</h1>
+    <p class="escrow-lead">
+      Budget réservé à la création d’une mission ; après acceptation d’une offre, les fonds sont en escrow.
+      Le <strong>freelancer</strong> envoie fichiers / lien au <strong>client</strong> depuis le chat mission. Quand le client valide,
+      la mission apparaît ci‑dessous : vous pouvez alors <strong>libérer l’escrow</strong> vers le wallet du freelancer.
+      Les clients peuvent demander une annulation (section dédiée).
+    </p>
+  </header>
+
+  <div *ngIf="loading" class="state state--loading">Chargement…</div>
+
+  <p *ngIf="error" class="state state--error">{{ error }}</p>
+
+  <ng-container *ngIf="!loading && !error">
+    <section class="table-card cancel-section" *ngIf="pendingWorkSubmissions.length > 0">
+      <h2 class="section-title">Prêtes à libérer (client a validé le livrable)</h2>
+      <p class="section-lead">
+        Le client a confirmé le travail dans l’app. Vérifiez pièces jointes / lien si besoin, puis « Libérer » crédite le freelancer et clôt la mission.
+      </p>
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Projet</th>
+              <th>Client</th>
+              <th>Freelancer</th>
+              <th>Message</th>
+              <th>Lien</th>
+              <th>Fichiers</th>
+              <th>Montant</th>
+              <th class="col-actions">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of pendingWorkSubmissions">
+              <td>
+                <div class="cell-strong">{{ p.title }}</div>
+              </td>
+              <td>{{ ownerName(p) }}</td>
+              <td>{{ freelancerName(p) }}</td>
+              <td class="cell-muted cell-wrap">{{ workMessage(p) }}</td>
+              <td class="cell-wrap">
+                <a
+                  *ngIf="workDemoLink(p)"
+                  [href]="workDemoLink(p)"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="ext-link"
+                  >Ouvrir le lien</a
+                >
+                <span *ngIf="!workDemoLink(p)" class="cell-muted">—</span>
+              </td>
+              <td class="cell-files">
+                <ng-container *ngFor="let f of p.adminWorkSubmission?.files || []">
+                  <a
+                    class="ext-link"
+                    [href]="fileDownloadUrl(f.filename)"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >{{ f.originalName || f.filename }}</a
+                  ><br />
+                </ng-container>
+                <span
+                  *ngIf="!(p.adminWorkSubmission?.files?.length)"
+                  class="cell-muted"
+                  >—</span
+                >
+              </td>
+              <td class="cell-numeric">{{ amount(p) | number : '1.0-0' }}&nbsp;DT</td>
+              <td class="col-actions">
+                <div class="action-btns">
+                  <button type="button" class="btn btn-release" (click)="onRelease(p._id)">Libérer</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="table-card cancel-section" *ngIf="cancellationRequests.length > 0">
+      <h2 class="section-title">Demandes d’annulation (client)</h2>
+      <p class="section-lead">
+        Approuver : rembourse le montant en escrow vers le wallet du client et supprime la mission. Refuser : la
+        mission reste en escrow ; vous pouvez ensuite libérer ou rembourser manuellement.
+      </p>
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Projet</th>
+              <th>Client</th>
+              <th>Freelancer</th>
+              <th>Montant</th>
+              <th>Motif client</th>
+              <th class="col-actions">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of cancellationRequests">
+              <td>
+                <div class="cell-strong">{{ p.title }}</div>
+              </td>
+              <td>{{ ownerName(p) }}</td>
+              <td>{{ freelancerName(p) }}</td>
+              <td class="cell-numeric">{{ amount(p) | number : '1.0-0' }}&nbsp;DT</td>
+              <td class="cell-muted">{{ clientCancelReason(p) }}</td>
+              <td class="col-actions">
+                <div class="action-btns">
+                  <button type="button" class="btn btn-release" (click)="onApproveCancellation(p._id)">
+                    Approuver annulation
+                  </button>
+                  <button type="button" class="btn btn-refund" (click)="onRejectCancellation(p._id)">
+                    Refuser
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <div *ngIf="projects.length === 0" class="empty-state">
+      <p class="empty-state__title">Aucun projet en escrow</p>
+      <p class="empty-state__text">
+        Les projets apparaîtront ici lorsque le client aura accepté une offre (paiement verrouillé).
+      Si un client a validé un livrable, la mission apparaît dans la section « Prêtes à libérer » jusqu’à votre action.
+      </p>
+    </div>
+
+    <div class="table-card" *ngIf="projects.length > 0">
+      <h2 class="section-title">Tous les projets en escrow</h2>
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Projet</th>
+              <th>Client</th>
+              <th>Freelancer</th>
+              <th>Montant</th>
+              <th>Statut projet</th>
+              <th>Paiement</th>
+              <th>Annulation</th>
+              <th>Livrable</th>
+              <th class="col-actions">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of projects">
+              <td>
+                <div class="cell-strong">{{ p.title }}</div>
+                <div class="cell-muted" *ngIf="p.description as desc">
+                  {{ desc | slice : 0 : 80 }}<span *ngIf="desc.length > 80">…</span>
+                </div>
+              </td>
+              <td>{{ ownerName(p) }}</td>
+              <td>{{ freelancerName(p) }}</td>
+              <td class="cell-numeric">{{ amount(p) | number : '1.0-0' }}&nbsp;DT</td>
+              <td><span class="pill pill--neutral">{{ projectStatusLabel(p.status) }}</span></td>
+              <td><span [ngClass]="badgeClass(p.paymentStatus)">{{ paymentLabel(p.paymentStatus) }}</span></td>
+              <td>
+                <span *ngIf="p.cancellationRequested" class="pill pill--accent">Demandée</span>
+                <span *ngIf="!p.cancellationRequested" class="cell-muted">—</span>
+              </td>
+              <td>
+                <span [ngClass]="submissionPillClass(p)">{{ submissionPillLabel(p) }}</span>
+              </td>
+              <td class="col-actions">
+                <div class="action-btns">
+                  <button type="button" class="btn btn-release" [disabled]="!canRelease(p)" (click)="onRelease(p._id)">
+                    Libérer
+                  </button>
+                  <button type="button" class="btn btn-refund" [disabled]="!canRefund(p)" (click)="onRefund(p._id)">
+                    Rembourser
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </ng-container>
+</div>

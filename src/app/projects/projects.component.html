@@ -1,0 +1,148 @@
+<div class="projects-page">
+  <header class="page-header">
+    <div class="page-header__text">
+      <h1 class="page-title">
+        <span class="page-title__icon" aria-hidden="true">
+          <i class="fas fa-briefcase"></i>
+        </span>
+        Gestion des projets
+      </h1>
+      <p class="page-lead">
+        Vue d’ensemble des missions publiées sur LANCY — budget, statut et client associé.
+      </p>
+    </div>
+    <div class="stat-row" *ngIf="!loading && !error">
+      <span class="stat-chip stat-chip--total">
+        <i class="fas fa-layer-group"></i>
+        {{ projects.length }} total
+      </span>
+      <span class="stat-chip stat-chip--open">
+        <i class="fas fa-circle-dot"></i>
+        {{ countByStatus('open') }} ouverts
+      </span>
+      <span class="stat-chip stat-chip--progress">
+        <i class="fas fa-spinner"></i>
+        {{ countByStatus('in_progress') }} en cours
+      </span>
+      <span class="stat-chip stat-chip--done">
+        <i class="fas fa-check-circle"></i>
+        {{ countByStatus('completed') }} terminés
+      </span>
+    </div>
+  </header>
+
+  <div class="toolbar" *ngIf="!loading && !error">
+    <label class="search-box">
+      <i class="fas fa-search search-box__icon" aria-hidden="true"></i>
+      <input
+        type="search"
+        class="search-box__input"
+        placeholder="Rechercher par titre, client ou statut…"
+        [(ngModel)]="searchTerm"
+        autocomplete="off"
+      />
+    </label>
+    <span class="toolbar__hint" *ngIf="searchTerm">
+      {{ filteredProjects.length }} résultat(s)
+    </span>
+  </div>
+
+  <div *ngIf="loading" class="state state--loading">
+    <div class="loader" aria-hidden="true"></div>
+    <span>Chargement des projets…</span>
+  </div>
+
+  <p *ngIf="error" class="state state--error">
+    <i class="fas fa-triangle-exclamation"></i>
+    {{ error }}
+  </p>
+
+  <section class="table-card" *ngIf="!loading && !error">
+    <div class="table-scroll">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Projet</th>
+            <th>Client</th>
+            <th>Budget</th>
+            <th>Statut</th>
+            <th>Date</th>
+            <th class="col-actions">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let project of filteredProjects" class="data-row">
+            <td class="col-project">
+              <div class="cell-strong">{{ project.title }}</div>
+              <p class="cell-desc" [title]="project.description">
+                {{ project.description || '—' }}
+              </p>
+            </td>
+
+            <td class="col-client">
+              <ng-container *ngIf="ownerName(project) !== 'Inconnu'; else noOwner">
+                <div class="client-cell">
+                  <span class="client-avatar" aria-hidden="true">
+                    {{ ownerInitial(project) }}
+                  </span>
+                  <div>
+                    <div class="cell-strong cell-strong--sm">{{ ownerName(project) }}</div>
+                    <div class="cell-muted">{{ ownerEmail(project) }}</div>
+                  </div>
+                </div>
+              </ng-container>
+              <ng-template #noOwner>
+                <span class="pill pill--danger">Client inconnu</span>
+              </ng-template>
+            </td>
+
+            <td class="cell-numeric">
+              <span class="budget-pill">{{ project.budget | number : '1.0-0' }} DT</span>
+            </td>
+
+            <td>
+              <span class="pill" [ngClass]="statusPillClass(project.status)">
+                {{ statusLabel(project.status) }}
+              </span>
+            </td>
+
+            <td class="cell-date">
+              {{ project.createdAt | date : 'dd MMM yyyy' }}
+            </td>
+
+            <td class="col-actions">
+              <button
+                type="button"
+                class="btn-icon btn-icon--danger"
+                title="Supprimer le projet"
+                (click)="deleteProject(project._id)"
+              >
+                <i class="fas fa-trash-alt"></i>
+              </button>
+            </td>
+          </tr>
+
+          <tr *ngIf="projects.length === 0">
+            <td colspan="6">
+              <div class="empty-state">
+                <i class="fas fa-folder-open empty-state__icon"></i>
+                <p class="empty-state__title">Aucun projet</p>
+                <p class="empty-state__text">Les missions publiées par les clients apparaîtront ici.</p>
+              </div>
+            </td>
+          </tr>
+
+          <tr *ngIf="projects.length > 0 && filteredProjects.length === 0">
+            <td colspan="6">
+              <div class="empty-state empty-state--compact">
+                <i class="fas fa-magnifying-glass empty-state__icon"></i>
+                <p class="empty-state__title">Aucun résultat</p>
+                <p class="empty-state__text">Essayez un autre mot-clé.</p>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>

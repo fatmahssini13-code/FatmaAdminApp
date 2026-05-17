@@ -1,0 +1,149 @@
+.dashboard-page {
+  min-width: 0;
+}
+
+.dash-header {
+  margin-bottom: 24px;
+}
+
+.dash-title {
+  margin: 0 0 8px;
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+}
+
+.dash-lead {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #64748b;
+}
+
+/* CARDS */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.card {
+  padding: 22px 24px;
+  border-radius: 16px;
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: 0.3s;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 128px;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.blue {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+.purple {
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+}
+
+.cyan {
+  background: linear-gradient(135deg, #06b6d4, #0891b2);
+}
+
+.orange {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.card h3 {
+  margin: 0 0 16px;
+  font-size: 15px;
+  font-weight: 600;
+  opacity: 0.95;
+  line-height: 1.3;
+}
+
+.card p {
+  margin: 0;
+  font-size: 2.1rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+/* CHARTS */
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 24px;
+  align-items: stretch;
+}
+
+.chart-card {
+  background: white;
+  padding: 24px 24px 20px;
+  border-radius: 18px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  overflow: visible;
+  min-width: 0;
+}
+
+.chart-title {
+  margin: 0 0 6px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.chart-sub {
+  margin: 0 0 16px;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.chart-surface {
+  position: relative;
+  width: 100%;
+  min-height: 280px;
+  height: 300px;
+}
+
+.chart-surface--donut {
+  min-height: 320px;
+  height: 360px;
+}
+
+.chart-surface--bar {
+  height: 320px;
+}
+
+.chart-surface canvas {
+  display: block;
+}
+
+:host-context(body.dark-mode) .chart-card {
+  background: #1e293b;
+  color: white;
+}
+
+:host-context(body.dark-mode) .chart-title {
+  color: #f1f5f9;
+}
+
+:host-context(body.dark-mode) .chart-sub {
+  color: #94a3b8;
+}
+
+:host-context(body.dark-mode) .dash-title {
+  color: #f1f5f9;
+}
+
+:host-context(body.dark-mode) .dash-lead {
+  color: #94a3b8;
+}
