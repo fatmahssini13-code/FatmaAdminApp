@@ -37,10 +37,10 @@ export class UsersComponent implements OnInit {
     });
   }
 
-  deleteUser(id: string) {
-    if (!confirm('Voulez-vous vraiment supprimer cet utilisateur ?')) return;
+  archiveUser(id: string) {
+    if (!confirm('Voulez-vous vraiment archiver cet utilisateur ?')) return;
 
-    this.adminService.deleteUser(id).subscribe({
+    this.adminService.archiveUser(id).subscribe({
       next:  () => { this.users = this.users.filter(u => u._id !== id); },
       error: (err) => alert('Erreur : ' + err.message),
     });

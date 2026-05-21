@@ -309,15 +309,15 @@ tbody td {
   box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
 }
 
-.btn-delete {
+.btn-archive {
   background: #fff;
-  color: #e53e3e;
-  border-color: #e53e3e;
+  color: #805ad5;
+  border-color: #805ad5;
 }
-.btn-delete:hover {
-  background: #e53e3e;
+.btn-archive:hover {
+  background: #805ad5;
   color: white;
-  box-shadow: 0 4px 12px rgba(229, 62, 62, 0.3);
+  box-shadow: 0 4px 12px rgba(128, 90, 213, 0.3);
 }
 
 /* ─── Empty State ───────────────────────────────────────────────── */

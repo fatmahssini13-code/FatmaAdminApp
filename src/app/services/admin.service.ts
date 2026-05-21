@@ -63,7 +63,7 @@ export class AdminService {
     return this.http.get<User[]>(`${this.api}/users`, { headers: this.headers() });
   }
 
-  deleteUser(id: string): Observable<any> {
+  archiveUser(id: string): Observable<any> {
     return this.http.delete(`${this.api}/users/${id}`, { headers: this.headers() });
   }
 
@@ -77,8 +77,7 @@ export class AdminService {
   }
 
   deleteProject(id: string): Observable<any> {
-    // ⚠️ Cette route doit exister dans projectRoutes, pas adminRoutes
-    return this.http.delete(`${this.apiRoot}/projects/${id}`, { headers: this.headers() });
+    return this.http.delete(`${this.api}/projects/${id}`, { headers: this.headers() });
   }
 
   // ─── ESCROW ─────────────────────────────────────────────────────────────────
