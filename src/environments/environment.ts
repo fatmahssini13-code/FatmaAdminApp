@@ -6,5 +6,5 @@
  */
 export const environment = {
   production: false,
-  apiOrigin: 'https://fatma-backend-app.vercel.app',
+apiOrigin: "https://fatma-backend-app-three.vercel.app",
 };
