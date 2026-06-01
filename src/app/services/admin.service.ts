@@ -89,7 +89,7 @@ getEscrowProjects() {
 
 releaseFunds(projectId: string) {
   return this.http.post(
-    `${this.api}/release-funds`,
+    `${this.api}/escrow/release-funds`,  
     { projectId },
     { headers: this.headers() },
   );
@@ -97,8 +97,8 @@ releaseFunds(projectId: string) {
 
 refundClient(projectId: string) {
   return this.http.post(
-    `${this.api}/refund/${projectId}`,
-    {},
+    `${this.api}/escrow/refund-client`,  
+    { projectId },
     { headers: this.headers() },
   );
 }
